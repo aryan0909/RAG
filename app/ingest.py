@@ -10,31 +10,38 @@ def load_document(file_path: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def chunk_text(text: str, chunk_size: int = 500, overlap: int = 50) -> list[str]:
-    """Split text into overlapping character-based chunks."""
-    if chunk_size <=0:
-        raise ValueError("Chunk Size must be greater than Zero")
+def chunk_text(text: str) -> list[str]:
+    """Split text into heading aware policy chunks."""
 
-    if overlap < 0 or overlap >= chunk_size:
-        raise ValueError("Overlap must be non negaitve and samller than chunk size")
-
-    text = " ".join(text.split())
+    sections = [
+        section.strip()
+        for section in text.split("\n\n")
+        if section.strip()
+    ]
 
     chunks = []
+    current_chunk = []
 
-    start = 0
+    for section in sections:
+        # A section without a heading starts a new chunk.
+        if not current_chunk:
+            current_chunk.append(section)
+            continue
 
-    while start < len(text):
-        end = min(start+chunk_size, len(text))
-        chunk = text[start:end].strip()
+        # Recognize policy heading by their naming convention
+        is_heading = (
+            section.lower().endswith("policy")
+            and len(section.split()) <= 5
+        )
 
-        if chunk:        
-            chunks.append(chunk)
+        if is_heading:
+            chunks.append("\n\n". join(current_chunk))
+            current_chunk = [section]
+        else:
+            current_chunk.append(section)
 
-        if end == len(text):
-            break;
-
-        start = end - overlap
+    if current_chunk:
+        chunks.append("\n\n".join(current_chunk))
 
     return chunks
 
