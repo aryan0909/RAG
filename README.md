@@ -38,11 +38,12 @@ The application uses **LanceDB** for vector search, **FastEmbed** for embeddings
 
 ## Architecture
 
-```mermaid
+USE MERMAID EDITOR
+
 flowchart TD
-    A[Company Documents] --> B[Document Loading and Chunking]
-    B --> C[FastEmbed]
-    C --> D[(LanceDB)]
+A[Company Documents] --> B[Document Loading and Chunking]
+B --> C[FastEmbed]
+C --> D[(LanceDB)]
 
     E[User Question] --> F[Query Embedding]
     F --> G[Vector Search]
@@ -62,7 +63,6 @@ flowchart TD
 
     O[FastAPI REST API] --> P[/search and /ask]
     P --> G
-```
 
 The Streamlit UI currently calls the RAG pipeline directly. FastAPI exposes separate REST endpoints for retrieval and question answering.
 
@@ -338,7 +338,7 @@ Generated vector databases, virtual environments, and local model caches should 
 
 ## License
 
-Add an open-source license before distributing the project if you want to specify how others may use, modify, and redistribute it.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details
 
 ---
 
